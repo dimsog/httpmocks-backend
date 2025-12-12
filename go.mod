@@ -1,4 +1,4 @@
-module httpmocks
+module github.com/dimsog/httpmocks-backend
 
 go 1.25.5
 
