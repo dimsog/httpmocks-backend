@@ -1,15 +1,19 @@
 package main
 
 import (
+	"context"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
+	"github.com/dimsog/httpmocks-backend/internal/logger"
 	"github.com/go-chi/chi/v5"
 )
 
 func main() {
+	log := logger.New()
 	router := chi.NewRouter()
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
@@ -22,10 +26,20 @@ func main() {
 	}
 
 	go func() {
-		srv.ListenAndServe()
-	}()
+		log.Debug("Server starting...")
+		err := srv.ListenAndServe()
 
+		if err != nil {
+			log.Error(err.Error())
+		}
+	}()
+	
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
+
+	_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	log.Debug("Server shutdown")
 }
