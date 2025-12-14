@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	save "github.com/dimsog/httpmocks-backend/internal/http-server/handlers/v1/mock"
 	middlewareLogger "github.com/dimsog/httpmocks-backend/internal/http-server/middleware/logger"
 	"github.com/dimsog/httpmocks-backend/internal/logger"
 	"github.com/go-chi/chi/v5"
@@ -24,6 +25,10 @@ func main() {
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("OK"))
+	})
+
+	router.Route("/api/v1", func(r chi.Router) {
+		r.Post("/mock", save.New(log))
 	})
 
 	srv := &http.Server{
