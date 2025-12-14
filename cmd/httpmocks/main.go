@@ -10,11 +10,14 @@ import (
 
 	"github.com/dimsog/httpmocks-backend/internal/logger"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 func main() {
 	log := logger.New()
 	router := chi.NewRouter()
+
+	router.Use(middleware.Recoverer)
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("OK"))
