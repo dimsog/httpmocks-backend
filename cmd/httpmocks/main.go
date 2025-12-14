@@ -21,7 +21,7 @@ func main() {
 	})
 
 	srv := &http.Server{
-		Addr:    "127.0.0.1:8000",
+		Addr:    "0.0.0.0:8000",
 		Handler: router,
 	}
 
@@ -33,7 +33,7 @@ func main() {
 			log.Error(err.Error())
 		}
 	}()
-	
+
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
