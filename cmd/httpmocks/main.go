@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	middlewareLogger "github.com/dimsog/httpmocks-backend/internal/http-server/middleware/logger"
 	"github.com/dimsog/httpmocks-backend/internal/logger"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -18,6 +19,8 @@ func main() {
 	router := chi.NewRouter()
 
 	router.Use(middleware.Recoverer)
+	router.Use(middleware.RealIP)
+	router.Use(middlewareLogger.New(log))
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("OK"))
