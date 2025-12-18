@@ -11,10 +11,20 @@ type Error struct {
 	Data    map[string]string `json:"data"`
 }
 
+type Response struct {
+	Success bool `json:"success"`
+}
+
 func ValidationError(w http.ResponseWriter, err error) error {
 	validationError := newValidationError(err)
 	w.WriteHeader(http.StatusUnprocessableEntity)
 	return Json(w, validationError)
+}
+
+func Success(w http.ResponseWriter) error {
+	return Json(w, Response{
+		Success: true,
+	})
 }
 
 func Json(w http.ResponseWriter, v any) error {

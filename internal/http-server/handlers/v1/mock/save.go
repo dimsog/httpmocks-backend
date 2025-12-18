@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/dimsog/httpmocks-backend/internal/http-server/render"
-	"github.com/dimsog/httpmocks-backend/internal/http-server/response"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -28,12 +27,13 @@ func New(log *slog.Logger) http.HandlerFunc {
 		err = validate.Struct(request)
 
 		if err != nil {
-
-			resp := response.ValidationError(err)
-			err = render.Json(w, resp)
+			err := render.ValidationError(w, err)
 			if err != nil {
 				log.Error(err.Error())
 			}
+			return
 		}
+
+		render.Success(w)
 	}
 }
