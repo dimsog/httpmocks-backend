@@ -10,6 +10,8 @@ services:
       - app
     depends_on:
       - app-db
+    environment:
+      DB_URI: ${DB_URI}
   app-db:
     image: "postgres:18"
     container_name: app-db
