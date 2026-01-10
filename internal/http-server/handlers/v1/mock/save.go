@@ -2,6 +2,9 @@ package save
 
 import (
 	"encoding/json"
+	"github.com/dimsog/httpmocks-backend/internal/repository"
+	"github.com/dimsog/httpmocks-backend/internal/types"
+	"github.com/jackc/pgx/v5"
 	"log/slog"
 	"net/http"
 
@@ -14,7 +17,7 @@ type Request struct {
 	Response    string `json:"response"`
 }
 
-func New(log *slog.Logger) http.HandlerFunc {
+func New(conn *pgx.Conn, log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var request Request
 		validate := validator.New()
@@ -33,6 +36,8 @@ func New(log *slog.Logger) http.HandlerFunc {
 			}
 			return
 		}
+
+		repository.Create(types.Mock{ContentType: "json", Body: "123"}, conn, log)
 
 		render.Success(w)
 	}

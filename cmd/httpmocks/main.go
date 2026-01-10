@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"github.com/dimsog/httpmocks-backend/internal/config"
+	"github.com/dimsog/httpmocks-backend/internal/database"
 	"net/http"
 	"os"
 	"os/signal"
@@ -16,7 +18,10 @@ import (
 )
 
 func main() {
+	cfg := config.MustLoadConfig()
 	log := logger.New()
+	conn := database.MustConnect(cfg.Db.Uri)
+
 	router := chi.NewRouter()
 
 	router.Use(middleware.Recoverer)
@@ -28,7 +33,7 @@ func main() {
 	})
 
 	router.Route("/api/v1", func(r chi.Router) {
-		r.Post("/mock", save.New(log))
+		r.Post("/mock", save.New(conn, log))
 	})
 
 	srv := &http.Server{
