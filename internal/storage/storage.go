@@ -14,11 +14,11 @@ func New(uri string) (*Storage, error) {
 	db, err := sql.Open("postgres", uri)
 
 	if err != nil {
-		return nil, fmt.Errorf("can't open db: %w", err)
+		return nil, fmt.Errorf("can't connect: %w", err)
 	}
 
 	if err := db.Ping(); err != nil {
-		return nil, fmt.Errorf("can't connect to db: %w", err)
+		return nil, fmt.Errorf("can't ping: %w", err)
 	}
 
 	return &Storage{
